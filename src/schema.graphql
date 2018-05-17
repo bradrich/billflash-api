@@ -1,0 +1,68 @@
+# import Bill, BillWhereInput, BillOrderByInput, BillCreateInput, BillWhereUniqueInput from './generated/prisma.graphql'
+# import Tag, TagWhereInput, TagOrderByInput, TagCreateInput, TagWhereUniqueInput from './generated/prisma.graphql'
+# import Payment, PaymentWhereInput, PaymentOrderByInput, PaymentCreateInput, PaymentWhereUniqueInput from './generated/prisma.graphql'
+# import File, FileWhereInput, FileOrderByInput, FileCreateInput, FileWhereUniqueInput from './generated/prisma.graphql'
+
+type Query {
+  bills(
+    where: BillWhereInput,
+    orderBy: BillOrderByInput,
+    skip: Int,
+    after: String,
+    before: String,
+    first: Int,
+    last: Int
+  ): [Bill]!
+  bill(where: BillWhereUniqueInput!): Bill
+
+  tags(
+    where: TagWhereInput,
+    orderBy: TagOrderByInput,
+    skip: Int,
+    after: String,
+    before: String,
+    first: Int,
+    last: Int
+  ): [Tag]!
+  tag(where: TagWhereUniqueInput!): Tag
+
+  payments(
+    where: PaymentWhereInput,
+    orderBy: PaymentOrderByInput,
+    skip: Int,
+    after: String,
+    before: String,
+    first: Int,
+    last: Int
+  ): [Payment]!
+  payment(where: PaymentWhereUniqueInput!): Payment
+
+  files(
+    where: FileWhereInput,
+    orderBy: FileOrderByInput,
+    skip: Int,
+    after: String,
+    before: String,
+    first: Int,
+    last: Int
+  ): [File]!
+  file(where: FileWhereUniqueInput!): File
+}
+
+type Mutation {
+  createBill(data: BillCreateInput!): Bill!
+  updateBill(data: BillUpdateInput!, where: BillWhereUniqueInput!): Bill
+  deleteBill(data: BillWhereUniqueInput!): Bill
+
+  createTag(data: TagCreateInput!): Tag!
+  updateTag(data: TagUpdateInput!, where: TagWhereUniqueInput!): Tag
+  deleteTag(data: TagWhereUniqueInput!): Tag
+
+  createPayment(data: PaymentCreateInput!): Payment!
+  updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
+  deletePayment(data: PaymentWhereUniqueInput!): Payment
+
+  createFile(data: FileCreateInput!): File!
+  updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
+  deleteFile(data: FileWhereUniqueInput!): File
+}

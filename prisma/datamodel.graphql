@@ -1,0 +1,141 @@
+enum BillType {
+  MORTGAGE_AND_RENT
+  CREDIT_CARD
+  SMARTPHONE
+  INSURANCE
+  ELECTRIC
+  GAS
+  INTERNET
+  PHONE
+  TRASH
+  WATER
+  BOAT
+  CAR
+  MOTORCYCLE
+  REPAIR_AND_MAINTENANCE
+  TRAVEL
+  CABLE_AND_VIDEO
+  CLOUD_SERVICE
+  MUSIC
+  SUBSCRIPTION
+  CLEANING
+  FOOD
+  LANDSCAPING_AND_LAWN
+  SECURITY
+  APPLIANCE
+  COMPUTER
+  FURNITURE
+  JEWELRY
+  SHOPPING
+  BABY_AND_CHILDCARE
+  DONATIONS
+  GYM_AND_SPORTS
+  HAIR_AND_BEAUTY
+  LEGAL
+  MEDICAL
+  ORGANIZATIONS
+  PET
+  SCHOOL_AND_STUDENT_LOANS
+  TICKET
+  BUSINESS
+  STORAGE_AND_DEPOSIT_BOX
+  LOAN_AND_SAVINGS
+  MAIL_AND_POST_OFFICE_BOX
+  SAVINGS
+  TAXES
+}
+
+enum BillCategory {
+  COMMON_BILLS
+  UTILITIES
+  TRANSPORTATION
+  SUBSCRIPTIONS
+  HOME
+  PURCHASES
+  PERSONAL
+  BUSINESS_AND_FINANCE
+}
+
+enum BillRepeatInterval {
+  WEEKLY
+  TWICE_PER_MONTH
+  MONTHLY
+  QUARTERLY
+  EVERY_6_MONTHS
+  EVERY_YEAR
+  CUSTOM
+  NEVER
+}
+
+enum BillCustomRepeatIntervalTimeName {
+  DAYS
+  WEEKS
+  MONTHS
+  FIRST_FRIDAY
+}
+
+enum BillPaymentMethod {
+  ONLINE
+  AUTOMATIC
+  MAIL
+  PHONE
+  OTHER
+}
+
+type Bill {
+  id: ID! @unique
+  name: String! @unique
+  type: BillType!
+  category: BillCategory!
+  isArchived: Boolean @default(value: "false")
+  nextDueDate: DateTime!
+  remindDate: DateTime
+  amountDue: Float
+  amountVaries: Boolean @default(value: "false")
+  repeatInterval: BillRepeatInterval @default(value: "MONTHLY")
+  customRepeatIntervalIncrement: Int
+  customRepeatIntervalTimeName: BillCustomRepeatIntervalTimeName @default(value: "DAYS")
+  paymentMethod: BillPaymentMethod @default(value: "ONLINE")
+  paymentUrl: String
+  currentBalance: Float @default(value: 0)
+  origBalance: Float @default(value: 0)
+  interestRate: Float @default(value: 0)
+  escrowAmount: Float @default(value: 0)
+  averagePaymentAmount: Float
+  notes: String
+  tags: [Tag!]!
+  payments: [Payment!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Tag {
+  id: ID! @unique
+  name: String! @unique
+  color: String! @default(value: "default")
+  bills: [Bill!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Payment {
+  id: ID! @unique
+  date: DateTime!
+  amount: Float!
+  note: String
+  receipt: File!
+  bill: Bill!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type File {
+  id: ID! @unique
+  name: String!
+  size: Int!
+  secret: String! @unique
+  contentType: String!
+  url: String! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}

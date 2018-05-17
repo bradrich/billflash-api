@@ -1,0 +1,11 @@
+{
+  "name": "billflash-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "graphql-yoga": "^1.13.1",
+    "prisma-binding": "^2.0.0"
+  },
+  "devDependencies": {}
+}

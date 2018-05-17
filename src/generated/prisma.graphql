@@ -1,0 +1,2094 @@
+# source: https://us1.prisma.sh/brad-richardson/billflash-api/dev
+# timestamp: Tue May 15 2018 09:20:56 GMT-0400 (Eastern Daylight Time)
+
+type AggregateBill {
+  count: Int!
+}
+
+type AggregateFile {
+  count: Int!
+}
+
+type AggregatePayment {
+  count: Int!
+}
+
+type AggregateTag {
+  count: Int!
+}
+
+type BatchPayload {
+  """The number of nodes that have been affected by the Batch operation."""
+  count: Long!
+}
+
+type Bill implements Node {
+  id: ID!
+  name: String!
+  type: BillType!
+  category: BillCategory!
+  isArchived: Boolean
+  nextDueDate: DateTime!
+  remindDate: DateTime
+  amountDue: Float
+  amountVaries: Boolean
+  repeatInterval: BillRepeatInterval
+  customRepeatIntervalIncrement: Int
+  customRepeatIntervalTimeName: BillCustomRepeatIntervalTimeName
+  paymentMethod: BillPaymentMethod
+  paymentUrl: String
+  currentBalance: Float
+  origBalance: Float
+  interestRate: Float
+  escrowAmount: Float
+  averagePaymentAmount: Float
+  notes: String
+  tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum BillCategory {
+  COMMON_BILLS
+  UTILITIES
+  TRANSPORTATION
+  SUBSCRIPTIONS
+  HOME
+  PURCHASES
+  PERSONAL
+  BUSINESS_AND_FINANCE
+}
+
+"""A connection to a list of items."""
+type BillConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [BillEdge]!
+  aggregate: AggregateBill!
+}
+
+input BillCreateInput {
+  name: String!
+  type: BillType!
+  category: BillCategory!
+  isArchived: Boolean
+  nextDueDate: DateTime!
+  remindDate: DateTime
+  amountDue: Float
+  amountVaries: Boolean
+  repeatInterval: BillRepeatInterval
+  customRepeatIntervalIncrement: Int
+  customRepeatIntervalTimeName: BillCustomRepeatIntervalTimeName
+  paymentMethod: BillPaymentMethod
+  paymentUrl: String
+  currentBalance: Float
+  origBalance: Float
+  interestRate: Float
+  escrowAmount: Float
+  averagePaymentAmount: Float
+  notes: String
+  tags: TagCreateManyWithoutBillsInput
+  payments: PaymentCreateManyWithoutBillInput
+}
+
+input BillCreateManyWithoutTagsInput {
+  create: [BillCreateWithoutTagsInput!]
+  connect: [BillWhereUniqueInput!]
+}
+
+input BillCreateOneWithoutPaymentsInput {
+  create: BillCreateWithoutPaymentsInput
+  connect: BillWhereUniqueInput
+}
+
+input BillCreateWithoutPaymentsInput {
+  name: String!
+  type: BillType!
+  category: BillCategory!
+  isArchived: Boolean
+  nextDueDate: DateTime!
+  remindDate: DateTime
+  amountDue: Float
+  amountVaries: Boolean
+  repeatInterval: BillRepeatInterval
+  customRepeatIntervalIncrement: Int
+  customRepeatIntervalTimeName: BillCustomRepeatIntervalTimeName
+  paymentMethod: BillPaymentMethod
+  paymentUrl: String
+  currentBalance: Float
+  origBalance: Float
+  interestRate: Float
+  escrowAmount: Float
+  averagePaymentAmount: Float
+  notes: String
+  tags: TagCreateManyWithoutBillsInput
+}
+
+input BillCreateWithoutTagsInput {
+  name: String!
+  type: BillType!
+  category: BillCategory!
+  isArchived: Boolean
+  nextDueDate: DateTime!
+  remindDate: DateTime
+  amountDue: Float
+  amountVaries: Boolean
+  repeatInterval: BillRepeatInterval
+  customRepeatIntervalIncrement: Int
+  customRepeatIntervalTimeName: BillCustomRepeatIntervalTimeName
+  paymentMethod: BillPaymentMethod
+  paymentUrl: String
+  currentBalance: Float
+  origBalance: Float
+  interestRate: Float
+  escrowAmount: Float
+  averagePaymentAmount: Float
+  notes: String
+  payments: PaymentCreateManyWithoutBillInput
+}
+
+enum BillCustomRepeatIntervalTimeName {
+  DAYS
+  WEEKS
+  MONTHS
+  FIRST_FRIDAY
+}
+
+"""An edge in a connection."""
+type BillEdge {
+  """The item at the end of the edge."""
+  node: Bill!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum BillOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  type_ASC
+  type_DESC
+  category_ASC
+  category_DESC
+  isArchived_ASC
+  isArchived_DESC
+  nextDueDate_ASC
+  nextDueDate_DESC
+  remindDate_ASC
+  remindDate_DESC
+  amountDue_ASC
+  amountDue_DESC
+  amountVaries_ASC
+  amountVaries_DESC
+  repeatInterval_ASC
+  repeatInterval_DESC
+  customRepeatIntervalIncrement_ASC
+  customRepeatIntervalIncrement_DESC
+  customRepeatIntervalTimeName_ASC
+  customRepeatIntervalTimeName_DESC
+  paymentMethod_ASC
+  paymentMethod_DESC
+  paymentUrl_ASC
+  paymentUrl_DESC
+  currentBalance_ASC
+  currentBalance_DESC
+  origBalance_ASC
+  origBalance_DESC
+  interestRate_ASC
+  interestRate_DESC
+  escrowAmount_ASC
+  escrowAmount_DESC
+  averagePaymentAmount_ASC
+  averagePaymentAmount_DESC
+  notes_ASC
+  notes_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+enum BillPaymentMethod {
+  ONLINE
+  AUTOMATIC
+  MAIL
+  PHONE
+  OTHER
+}
+
+type BillPreviousValues {
+  id: ID!
+  name: String!
+  type: BillType!
+  category: BillCategory!
+  isArchived: Boolean
+  nextDueDate: DateTime!
+  remindDate: DateTime
+  amountDue: Float
+  amountVaries: Boolean
+  repeatInterval: BillRepeatInterval
+  customRepeatIntervalIncrement: Int
+  customRepeatIntervalTimeName: BillCustomRepeatIntervalTimeName
+  paymentMethod: BillPaymentMethod
+  paymentUrl: String
+  currentBalance: Float
+  origBalance: Float
+  interestRate: Float
+  escrowAmount: Float
+  averagePaymentAmount: Float
+  notes: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum BillRepeatInterval {
+  WEEKLY
+  TWICE_PER_MONTH
+  MONTHLY
+  QUARTERLY
+  EVERY_6_MONTHS
+  EVERY_YEAR
+  CUSTOM
+  NEVER
+}
+
+type BillSubscriptionPayload {
+  mutation: MutationType!
+  node: Bill
+  updatedFields: [String!]
+  previousValues: BillPreviousValues
+}
+
+input BillSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [BillSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [BillSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [BillSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: BillWhereInput
+}
+
+enum BillType {
+  MORTGAGE_AND_RENT
+  CREDIT_CARD
+  SMARTPHONE
+  INSURANCE
+  ELECTRIC
+  GAS
+  INTERNET
+  PHONE
+  TRASH
+  WATER
+  BOAT
+  CAR
+  MOTORCYCLE
+  REPAIR_AND_MAINTENANCE
+  TRAVEL
+  CABLE_AND_VIDEO
+  CLOUD_SERVICE
+  MUSIC
+  SUBSCRIPTION
+  CLEANING
+  FOOD
+  LANDSCAPING_AND_LAWN
+  SECURITY
+  APPLIANCE
+  COMPUTER
+  FURNITURE
+  JEWELRY
+  SHOPPING
+  BABY_AND_CHILDCARE
+  DONATIONS
+  GYM_AND_SPORTS
+  HAIR_AND_BEAUTY
+  LEGAL
+  MEDICAL
+  ORGANIZATIONS
+  PET
+  SCHOOL_AND_STUDENT_LOANS
+  TICKET
+  BUSINESS
+  STORAGE_AND_DEPOSIT_BOX
+  LOAN_AND_SAVINGS
+  MAIL_AND_POST_OFFICE_BOX
+  SAVINGS
+  TAXES
+}
+
+input BillUpdateInput {
+  name: String
+  type: BillType
+  category: BillCategory
+  isArchived: Boolean
+  nextDueDate: DateTime
+  remindDate: DateTime
+  amountDue: Float
+  amountVaries: Boolean
+  repeatInterval: BillRepeatInterval
+  customRepeatIntervalIncrement: Int
+  customRepeatIntervalTimeName: BillCustomRepeatIntervalTimeName
+  paymentMethod: BillPaymentMethod
+  paymentUrl: String
+  currentBalance: Float
+  origBalance: Float
+  interestRate: Float
+  escrowAmount: Float
+  averagePaymentAmount: Float
+  notes: String
+  tags: TagUpdateManyWithoutBillsInput
+  payments: PaymentUpdateManyWithoutBillInput
+}
+
+input BillUpdateManyWithoutTagsInput {
+  create: [BillCreateWithoutTagsInput!]
+  connect: [BillWhereUniqueInput!]
+  disconnect: [BillWhereUniqueInput!]
+  delete: [BillWhereUniqueInput!]
+  update: [BillUpdateWithWhereUniqueWithoutTagsInput!]
+  upsert: [BillUpsertWithWhereUniqueWithoutTagsInput!]
+}
+
+input BillUpdateOneWithoutPaymentsInput {
+  create: BillCreateWithoutPaymentsInput
+  connect: BillWhereUniqueInput
+  delete: Boolean
+  update: BillUpdateWithoutPaymentsDataInput
+  upsert: BillUpsertWithoutPaymentsInput
+}
+
+input BillUpdateWithoutPaymentsDataInput {
+  name: String
+  type: BillType
+  category: BillCategory
+  isArchived: Boolean
+  nextDueDate: DateTime
+  remindDate: DateTime
+  amountDue: Float
+  amountVaries: Boolean
+  repeatInterval: BillRepeatInterval
+  customRepeatIntervalIncrement: Int
+  customRepeatIntervalTimeName: BillCustomRepeatIntervalTimeName
+  paymentMethod: BillPaymentMethod
+  paymentUrl: String
+  currentBalance: Float
+  origBalance: Float
+  interestRate: Float
+  escrowAmount: Float
+  averagePaymentAmount: Float
+  notes: String
+  tags: TagUpdateManyWithoutBillsInput
+}
+
+input BillUpdateWithoutTagsDataInput {
+  name: String
+  type: BillType
+  category: BillCategory
+  isArchived: Boolean
+  nextDueDate: DateTime
+  remindDate: DateTime
+  amountDue: Float
+  amountVaries: Boolean
+  repeatInterval: BillRepeatInterval
+  customRepeatIntervalIncrement: Int
+  customRepeatIntervalTimeName: BillCustomRepeatIntervalTimeName
+  paymentMethod: BillPaymentMethod
+  paymentUrl: String
+  currentBalance: Float
+  origBalance: Float
+  interestRate: Float
+  escrowAmount: Float
+  averagePaymentAmount: Float
+  notes: String
+  payments: PaymentUpdateManyWithoutBillInput
+}
+
+input BillUpdateWithWhereUniqueWithoutTagsInput {
+  where: BillWhereUniqueInput!
+  data: BillUpdateWithoutTagsDataInput!
+}
+
+input BillUpsertWithoutPaymentsInput {
+  update: BillUpdateWithoutPaymentsDataInput!
+  create: BillCreateWithoutPaymentsInput!
+}
+
+input BillUpsertWithWhereUniqueWithoutTagsInput {
+  where: BillWhereUniqueInput!
+  update: BillUpdateWithoutTagsDataInput!
+  create: BillCreateWithoutTagsInput!
+}
+
+input BillWhereInput {
+  """Logical AND on all given filters."""
+  AND: [BillWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [BillWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [BillWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  type: BillType
+
+  """All values that are not equal to given value."""
+  type_not: BillType
+
+  """All values that are contained in given list."""
+  type_in: [BillType!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [BillType!]
+  category: BillCategory
+
+  """All values that are not equal to given value."""
+  category_not: BillCategory
+
+  """All values that are contained in given list."""
+  category_in: [BillCategory!]
+
+  """All values that are not contained in given list."""
+  category_not_in: [BillCategory!]
+  isArchived: Boolean
+
+  """All values that are not equal to given value."""
+  isArchived_not: Boolean
+  nextDueDate: DateTime
+
+  """All values that are not equal to given value."""
+  nextDueDate_not: DateTime
+
+  """All values that are contained in given list."""
+  nextDueDate_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  nextDueDate_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  nextDueDate_lt: DateTime
+
+  """All values less than or equal the given value."""
+  nextDueDate_lte: DateTime
+
+  """All values greater than the given value."""
+  nextDueDate_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  nextDueDate_gte: DateTime
+  remindDate: DateTime
+
+  """All values that are not equal to given value."""
+  remindDate_not: DateTime
+
+  """All values that are contained in given list."""
+  remindDate_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  remindDate_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  remindDate_lt: DateTime
+
+  """All values less than or equal the given value."""
+  remindDate_lte: DateTime
+
+  """All values greater than the given value."""
+  remindDate_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  remindDate_gte: DateTime
+  amountDue: Float
+
+  """All values that are not equal to given value."""
+  amountDue_not: Float
+
+  """All values that are contained in given list."""
+  amountDue_in: [Float!]
+
+  """All values that are not contained in given list."""
+  amountDue_not_in: [Float!]
+
+  """All values less than the given value."""
+  amountDue_lt: Float
+
+  """All values less than or equal the given value."""
+  amountDue_lte: Float
+
+  """All values greater than the given value."""
+  amountDue_gt: Float
+
+  """All values greater than or equal the given value."""
+  amountDue_gte: Float
+  amountVaries: Boolean
+
+  """All values that are not equal to given value."""
+  amountVaries_not: Boolean
+  repeatInterval: BillRepeatInterval
+
+  """All values that are not equal to given value."""
+  repeatInterval_not: BillRepeatInterval
+
+  """All values that are contained in given list."""
+  repeatInterval_in: [BillRepeatInterval!]
+
+  """All values that are not contained in given list."""
+  repeatInterval_not_in: [BillRepeatInterval!]
+  customRepeatIntervalIncrement: Int
+
+  """All values that are not equal to given value."""
+  customRepeatIntervalIncrement_not: Int
+
+  """All values that are contained in given list."""
+  customRepeatIntervalIncrement_in: [Int!]
+
+  """All values that are not contained in given list."""
+  customRepeatIntervalIncrement_not_in: [Int!]
+
+  """All values less than the given value."""
+  customRepeatIntervalIncrement_lt: Int
+
+  """All values less than or equal the given value."""
+  customRepeatIntervalIncrement_lte: Int
+
+  """All values greater than the given value."""
+  customRepeatIntervalIncrement_gt: Int
+
+  """All values greater than or equal the given value."""
+  customRepeatIntervalIncrement_gte: Int
+  customRepeatIntervalTimeName: BillCustomRepeatIntervalTimeName
+
+  """All values that are not equal to given value."""
+  customRepeatIntervalTimeName_not: BillCustomRepeatIntervalTimeName
+
+  """All values that are contained in given list."""
+  customRepeatIntervalTimeName_in: [BillCustomRepeatIntervalTimeName!]
+
+  """All values that are not contained in given list."""
+  customRepeatIntervalTimeName_not_in: [BillCustomRepeatIntervalTimeName!]
+  paymentMethod: BillPaymentMethod
+
+  """All values that are not equal to given value."""
+  paymentMethod_not: BillPaymentMethod
+
+  """All values that are contained in given list."""
+  paymentMethod_in: [BillPaymentMethod!]
+
+  """All values that are not contained in given list."""
+  paymentMethod_not_in: [BillPaymentMethod!]
+  paymentUrl: String
+
+  """All values that are not equal to given value."""
+  paymentUrl_not: String
+
+  """All values that are contained in given list."""
+  paymentUrl_in: [String!]
+
+  """All values that are not contained in given list."""
+  paymentUrl_not_in: [String!]
+
+  """All values less than the given value."""
+  paymentUrl_lt: String
+
+  """All values less than or equal the given value."""
+  paymentUrl_lte: String
+
+  """All values greater than the given value."""
+  paymentUrl_gt: String
+
+  """All values greater than or equal the given value."""
+  paymentUrl_gte: String
+
+  """All values containing the given string."""
+  paymentUrl_contains: String
+
+  """All values not containing the given string."""
+  paymentUrl_not_contains: String
+
+  """All values starting with the given string."""
+  paymentUrl_starts_with: String
+
+  """All values not starting with the given string."""
+  paymentUrl_not_starts_with: String
+
+  """All values ending with the given string."""
+  paymentUrl_ends_with: String
+
+  """All values not ending with the given string."""
+  paymentUrl_not_ends_with: String
+  currentBalance: Float
+
+  """All values that are not equal to given value."""
+  currentBalance_not: Float
+
+  """All values that are contained in given list."""
+  currentBalance_in: [Float!]
+
+  """All values that are not contained in given list."""
+  currentBalance_not_in: [Float!]
+
+  """All values less than the given value."""
+  currentBalance_lt: Float
+
+  """All values less than or equal the given value."""
+  currentBalance_lte: Float
+
+  """All values greater than the given value."""
+  currentBalance_gt: Float
+
+  """All values greater than or equal the given value."""
+  currentBalance_gte: Float
+  origBalance: Float
+
+  """All values that are not equal to given value."""
+  origBalance_not: Float
+
+  """All values that are contained in given list."""
+  origBalance_in: [Float!]
+
+  """All values that are not contained in given list."""
+  origBalance_not_in: [Float!]
+
+  """All values less than the given value."""
+  origBalance_lt: Float
+
+  """All values less than or equal the given value."""
+  origBalance_lte: Float
+
+  """All values greater than the given value."""
+  origBalance_gt: Float
+
+  """All values greater than or equal the given value."""
+  origBalance_gte: Float
+  interestRate: Float
+
+  """All values that are not equal to given value."""
+  interestRate_not: Float
+
+  """All values that are contained in given list."""
+  interestRate_in: [Float!]
+
+  """All values that are not contained in given list."""
+  interestRate_not_in: [Float!]
+
+  """All values less than the given value."""
+  interestRate_lt: Float
+
+  """All values less than or equal the given value."""
+  interestRate_lte: Float
+
+  """All values greater than the given value."""
+  interestRate_gt: Float
+
+  """All values greater than or equal the given value."""
+  interestRate_gte: Float
+  escrowAmount: Float
+
+  """All values that are not equal to given value."""
+  escrowAmount_not: Float
+
+  """All values that are contained in given list."""
+  escrowAmount_in: [Float!]
+
+  """All values that are not contained in given list."""
+  escrowAmount_not_in: [Float!]
+
+  """All values less than the given value."""
+  escrowAmount_lt: Float
+
+  """All values less than or equal the given value."""
+  escrowAmount_lte: Float
+
+  """All values greater than the given value."""
+  escrowAmount_gt: Float
+
+  """All values greater than or equal the given value."""
+  escrowAmount_gte: Float
+  averagePaymentAmount: Float
+
+  """All values that are not equal to given value."""
+  averagePaymentAmount_not: Float
+
+  """All values that are contained in given list."""
+  averagePaymentAmount_in: [Float!]
+
+  """All values that are not contained in given list."""
+  averagePaymentAmount_not_in: [Float!]
+
+  """All values less than the given value."""
+  averagePaymentAmount_lt: Float
+
+  """All values less than or equal the given value."""
+  averagePaymentAmount_lte: Float
+
+  """All values greater than the given value."""
+  averagePaymentAmount_gt: Float
+
+  """All values greater than or equal the given value."""
+  averagePaymentAmount_gte: Float
+  notes: String
+
+  """All values that are not equal to given value."""
+  notes_not: String
+
+  """All values that are contained in given list."""
+  notes_in: [String!]
+
+  """All values that are not contained in given list."""
+  notes_not_in: [String!]
+
+  """All values less than the given value."""
+  notes_lt: String
+
+  """All values less than or equal the given value."""
+  notes_lte: String
+
+  """All values greater than the given value."""
+  notes_gt: String
+
+  """All values greater than or equal the given value."""
+  notes_gte: String
+
+  """All values containing the given string."""
+  notes_contains: String
+
+  """All values not containing the given string."""
+  notes_not_contains: String
+
+  """All values starting with the given string."""
+  notes_starts_with: String
+
+  """All values not starting with the given string."""
+  notes_not_starts_with: String
+
+  """All values ending with the given string."""
+  notes_ends_with: String
+
+  """All values not ending with the given string."""
+  notes_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  tags_every: TagWhereInput
+  tags_some: TagWhereInput
+  tags_none: TagWhereInput
+  payments_every: PaymentWhereInput
+  payments_some: PaymentWhereInput
+  payments_none: PaymentWhereInput
+}
+
+input BillWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+scalar DateTime
+
+type File implements Node {
+  id: ID!
+  name: String!
+  size: Int!
+  secret: String!
+  contentType: String!
+  url: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""A connection to a list of items."""
+type FileConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [FileEdge]!
+  aggregate: AggregateFile!
+}
+
+input FileCreateInput {
+  name: String!
+  size: Int!
+  secret: String!
+  contentType: String!
+  url: String!
+}
+
+input FileCreateOneInput {
+  create: FileCreateInput
+  connect: FileWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type FileEdge {
+  """The item at the end of the edge."""
+  node: File!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum FileOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  size_ASC
+  size_DESC
+  secret_ASC
+  secret_DESC
+  contentType_ASC
+  contentType_DESC
+  url_ASC
+  url_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type FilePreviousValues {
+  id: ID!
+  name: String!
+  size: Int!
+  secret: String!
+  contentType: String!
+  url: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type FileSubscriptionPayload {
+  mutation: MutationType!
+  node: File
+  updatedFields: [String!]
+  previousValues: FilePreviousValues
+}
+
+input FileSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [FileSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [FileSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [FileSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: FileWhereInput
+}
+
+input FileUpdateDataInput {
+  name: String
+  size: Int
+  secret: String
+  contentType: String
+  url: String
+}
+
+input FileUpdateInput {
+  name: String
+  size: Int
+  secret: String
+  contentType: String
+  url: String
+}
+
+input FileUpdateOneInput {
+  create: FileCreateInput
+  connect: FileWhereUniqueInput
+  delete: Boolean
+  update: FileUpdateDataInput
+  upsert: FileUpsertNestedInput
+}
+
+input FileUpsertNestedInput {
+  update: FileUpdateDataInput!
+  create: FileCreateInput!
+}
+
+input FileWhereInput {
+  """Logical AND on all given filters."""
+  AND: [FileWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [FileWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [FileWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  size: Int
+
+  """All values that are not equal to given value."""
+  size_not: Int
+
+  """All values that are contained in given list."""
+  size_in: [Int!]
+
+  """All values that are not contained in given list."""
+  size_not_in: [Int!]
+
+  """All values less than the given value."""
+  size_lt: Int
+
+  """All values less than or equal the given value."""
+  size_lte: Int
+
+  """All values greater than the given value."""
+  size_gt: Int
+
+  """All values greater than or equal the given value."""
+  size_gte: Int
+  secret: String
+
+  """All values that are not equal to given value."""
+  secret_not: String
+
+  """All values that are contained in given list."""
+  secret_in: [String!]
+
+  """All values that are not contained in given list."""
+  secret_not_in: [String!]
+
+  """All values less than the given value."""
+  secret_lt: String
+
+  """All values less than or equal the given value."""
+  secret_lte: String
+
+  """All values greater than the given value."""
+  secret_gt: String
+
+  """All values greater than or equal the given value."""
+  secret_gte: String
+
+  """All values containing the given string."""
+  secret_contains: String
+
+  """All values not containing the given string."""
+  secret_not_contains: String
+
+  """All values starting with the given string."""
+  secret_starts_with: String
+
+  """All values not starting with the given string."""
+  secret_not_starts_with: String
+
+  """All values ending with the given string."""
+  secret_ends_with: String
+
+  """All values not ending with the given string."""
+  secret_not_ends_with: String
+  contentType: String
+
+  """All values that are not equal to given value."""
+  contentType_not: String
+
+  """All values that are contained in given list."""
+  contentType_in: [String!]
+
+  """All values that are not contained in given list."""
+  contentType_not_in: [String!]
+
+  """All values less than the given value."""
+  contentType_lt: String
+
+  """All values less than or equal the given value."""
+  contentType_lte: String
+
+  """All values greater than the given value."""
+  contentType_gt: String
+
+  """All values greater than or equal the given value."""
+  contentType_gte: String
+
+  """All values containing the given string."""
+  contentType_contains: String
+
+  """All values not containing the given string."""
+  contentType_not_contains: String
+
+  """All values starting with the given string."""
+  contentType_starts_with: String
+
+  """All values not starting with the given string."""
+  contentType_not_starts_with: String
+
+  """All values ending with the given string."""
+  contentType_ends_with: String
+
+  """All values not ending with the given string."""
+  contentType_not_ends_with: String
+  url: String
+
+  """All values that are not equal to given value."""
+  url_not: String
+
+  """All values that are contained in given list."""
+  url_in: [String!]
+
+  """All values that are not contained in given list."""
+  url_not_in: [String!]
+
+  """All values less than the given value."""
+  url_lt: String
+
+  """All values less than or equal the given value."""
+  url_lte: String
+
+  """All values greater than the given value."""
+  url_gt: String
+
+  """All values greater than or equal the given value."""
+  url_gte: String
+
+  """All values containing the given string."""
+  url_contains: String
+
+  """All values not containing the given string."""
+  url_not_contains: String
+
+  """All values starting with the given string."""
+  url_starts_with: String
+
+  """All values not starting with the given string."""
+  url_not_starts_with: String
+
+  """All values ending with the given string."""
+  url_ends_with: String
+
+  """All values not ending with the given string."""
+  url_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+input FileWhereUniqueInput {
+  id: ID
+  secret: String
+  url: String
+}
+
+"""
+The `Long` scalar type represents non-fractional signed whole numeric values.
+Long can represent values between -(2^63) and 2^63 - 1.
+"""
+scalar Long
+
+type Mutation {
+  createBill(data: BillCreateInput!): Bill!
+  createTag(data: TagCreateInput!): Tag!
+  createPayment(data: PaymentCreateInput!): Payment!
+  createFile(data: FileCreateInput!): File!
+  updateBill(data: BillUpdateInput!, where: BillWhereUniqueInput!): Bill
+  updateTag(data: TagUpdateInput!, where: TagWhereUniqueInput!): Tag
+  updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
+  updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
+  deleteBill(where: BillWhereUniqueInput!): Bill
+  deleteTag(where: TagWhereUniqueInput!): Tag
+  deletePayment(where: PaymentWhereUniqueInput!): Payment
+  deleteFile(where: FileWhereUniqueInput!): File
+  upsertBill(where: BillWhereUniqueInput!, create: BillCreateInput!, update: BillUpdateInput!): Bill!
+  upsertTag(where: TagWhereUniqueInput!, create: TagCreateInput!, update: TagUpdateInput!): Tag!
+  upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
+  upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
+  updateManyBills(data: BillUpdateInput!, where: BillWhereInput): BatchPayload!
+  updateManyTags(data: TagUpdateInput!, where: TagWhereInput): BatchPayload!
+  updateManyPayments(data: PaymentUpdateInput!, where: PaymentWhereInput): BatchPayload!
+  updateManyFiles(data: FileUpdateInput!, where: FileWhereInput): BatchPayload!
+  deleteManyBills(where: BillWhereInput): BatchPayload!
+  deleteManyTags(where: TagWhereInput): BatchPayload!
+  deleteManyPayments(where: PaymentWhereInput): BatchPayload!
+  deleteManyFiles(where: FileWhereInput): BatchPayload!
+}
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+"""An object with an ID"""
+interface Node {
+  """The id of the object."""
+  id: ID!
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+type Payment implements Node {
+  id: ID!
+  date: DateTime!
+  amount: Float!
+  note: String
+  receipt(where: FileWhereInput): File!
+  bill(where: BillWhereInput): Bill!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""A connection to a list of items."""
+type PaymentConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [PaymentEdge]!
+  aggregate: AggregatePayment!
+}
+
+input PaymentCreateInput {
+  date: DateTime!
+  amount: Float!
+  note: String
+  receipt: FileCreateOneInput!
+  bill: BillCreateOneWithoutPaymentsInput!
+}
+
+input PaymentCreateManyWithoutBillInput {
+  create: [PaymentCreateWithoutBillInput!]
+  connect: [PaymentWhereUniqueInput!]
+}
+
+input PaymentCreateWithoutBillInput {
+  date: DateTime!
+  amount: Float!
+  note: String
+  receipt: FileCreateOneInput!
+}
+
+"""An edge in a connection."""
+type PaymentEdge {
+  """The item at the end of the edge."""
+  node: Payment!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum PaymentOrderByInput {
+  id_ASC
+  id_DESC
+  date_ASC
+  date_DESC
+  amount_ASC
+  amount_DESC
+  note_ASC
+  note_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type PaymentPreviousValues {
+  id: ID!
+  date: DateTime!
+  amount: Float!
+  note: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PaymentSubscriptionPayload {
+  mutation: MutationType!
+  node: Payment
+  updatedFields: [String!]
+  previousValues: PaymentPreviousValues
+}
+
+input PaymentSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [PaymentSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PaymentSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PaymentSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: PaymentWhereInput
+}
+
+input PaymentUpdateInput {
+  date: DateTime
+  amount: Float
+  note: String
+  receipt: FileUpdateOneInput
+  bill: BillUpdateOneWithoutPaymentsInput
+}
+
+input PaymentUpdateManyWithoutBillInput {
+  create: [PaymentCreateWithoutBillInput!]
+  connect: [PaymentWhereUniqueInput!]
+  disconnect: [PaymentWhereUniqueInput!]
+  delete: [PaymentWhereUniqueInput!]
+  update: [PaymentUpdateWithWhereUniqueWithoutBillInput!]
+  upsert: [PaymentUpsertWithWhereUniqueWithoutBillInput!]
+}
+
+input PaymentUpdateWithoutBillDataInput {
+  date: DateTime
+  amount: Float
+  note: String
+  receipt: FileUpdateOneInput
+}
+
+input PaymentUpdateWithWhereUniqueWithoutBillInput {
+  where: PaymentWhereUniqueInput!
+  data: PaymentUpdateWithoutBillDataInput!
+}
+
+input PaymentUpsertWithWhereUniqueWithoutBillInput {
+  where: PaymentWhereUniqueInput!
+  update: PaymentUpdateWithoutBillDataInput!
+  create: PaymentCreateWithoutBillInput!
+}
+
+input PaymentWhereInput {
+  """Logical AND on all given filters."""
+  AND: [PaymentWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PaymentWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PaymentWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  date: DateTime
+
+  """All values that are not equal to given value."""
+  date_not: DateTime
+
+  """All values that are contained in given list."""
+  date_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  date_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  date_lt: DateTime
+
+  """All values less than or equal the given value."""
+  date_lte: DateTime
+
+  """All values greater than the given value."""
+  date_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  date_gte: DateTime
+  amount: Float
+
+  """All values that are not equal to given value."""
+  amount_not: Float
+
+  """All values that are contained in given list."""
+  amount_in: [Float!]
+
+  """All values that are not contained in given list."""
+  amount_not_in: [Float!]
+
+  """All values less than the given value."""
+  amount_lt: Float
+
+  """All values less than or equal the given value."""
+  amount_lte: Float
+
+  """All values greater than the given value."""
+  amount_gt: Float
+
+  """All values greater than or equal the given value."""
+  amount_gte: Float
+  note: String
+
+  """All values that are not equal to given value."""
+  note_not: String
+
+  """All values that are contained in given list."""
+  note_in: [String!]
+
+  """All values that are not contained in given list."""
+  note_not_in: [String!]
+
+  """All values less than the given value."""
+  note_lt: String
+
+  """All values less than or equal the given value."""
+  note_lte: String
+
+  """All values greater than the given value."""
+  note_gt: String
+
+  """All values greater than or equal the given value."""
+  note_gte: String
+
+  """All values containing the given string."""
+  note_contains: String
+
+  """All values not containing the given string."""
+  note_not_contains: String
+
+  """All values starting with the given string."""
+  note_starts_with: String
+
+  """All values not starting with the given string."""
+  note_not_starts_with: String
+
+  """All values ending with the given string."""
+  note_ends_with: String
+
+  """All values not ending with the given string."""
+  note_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  receipt: FileWhereInput
+  bill: BillWhereInput
+}
+
+input PaymentWhereUniqueInput {
+  id: ID
+}
+
+type Query {
+  bills(where: BillWhereInput, orderBy: BillOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Bill]!
+  tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag]!
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
+  files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
+  bill(where: BillWhereUniqueInput!): Bill
+  tag(where: TagWhereUniqueInput!): Tag
+  payment(where: PaymentWhereUniqueInput!): Payment
+  file(where: FileWhereUniqueInput!): File
+  billsConnection(where: BillWhereInput, orderBy: BillOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BillConnection!
+  tagsConnection(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TagConnection!
+  paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
+  filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
+
+  """Fetches an object given its ID"""
+  node(
+    """The ID of an object"""
+    id: ID!
+  ): Node
+}
+
+type Subscription {
+  bill(where: BillSubscriptionWhereInput): BillSubscriptionPayload
+  tag(where: TagSubscriptionWhereInput): TagSubscriptionPayload
+  payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
+  file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
+}
+
+type Tag implements Node {
+  id: ID!
+  name: String!
+  color: String!
+  bills(where: BillWhereInput, orderBy: BillOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Bill!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""A connection to a list of items."""
+type TagConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [TagEdge]!
+  aggregate: AggregateTag!
+}
+
+input TagCreateInput {
+  name: String!
+  color: String
+  bills: BillCreateManyWithoutTagsInput
+}
+
+input TagCreateManyWithoutBillsInput {
+  create: [TagCreateWithoutBillsInput!]
+  connect: [TagWhereUniqueInput!]
+}
+
+input TagCreateWithoutBillsInput {
+  name: String!
+  color: String
+}
+
+"""An edge in a connection."""
+type TagEdge {
+  """The item at the end of the edge."""
+  node: Tag!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum TagOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  color_ASC
+  color_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type TagPreviousValues {
+  id: ID!
+  name: String!
+  color: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type TagSubscriptionPayload {
+  mutation: MutationType!
+  node: Tag
+  updatedFields: [String!]
+  previousValues: TagPreviousValues
+}
+
+input TagSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TagSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TagSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TagSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: TagWhereInput
+}
+
+input TagUpdateInput {
+  name: String
+  color: String
+  bills: BillUpdateManyWithoutTagsInput
+}
+
+input TagUpdateManyWithoutBillsInput {
+  create: [TagCreateWithoutBillsInput!]
+  connect: [TagWhereUniqueInput!]
+  disconnect: [TagWhereUniqueInput!]
+  delete: [TagWhereUniqueInput!]
+  update: [TagUpdateWithWhereUniqueWithoutBillsInput!]
+  upsert: [TagUpsertWithWhereUniqueWithoutBillsInput!]
+}
+
+input TagUpdateWithoutBillsDataInput {
+  name: String
+  color: String
+}
+
+input TagUpdateWithWhereUniqueWithoutBillsInput {
+  where: TagWhereUniqueInput!
+  data: TagUpdateWithoutBillsDataInput!
+}
+
+input TagUpsertWithWhereUniqueWithoutBillsInput {
+  where: TagWhereUniqueInput!
+  update: TagUpdateWithoutBillsDataInput!
+  create: TagCreateWithoutBillsInput!
+}
+
+input TagWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TagWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TagWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TagWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  color: String
+
+  """All values that are not equal to given value."""
+  color_not: String
+
+  """All values that are contained in given list."""
+  color_in: [String!]
+
+  """All values that are not contained in given list."""
+  color_not_in: [String!]
+
+  """All values less than the given value."""
+  color_lt: String
+
+  """All values less than or equal the given value."""
+  color_lte: String
+
+  """All values greater than the given value."""
+  color_gt: String
+
+  """All values greater than or equal the given value."""
+  color_gte: String
+
+  """All values containing the given string."""
+  color_contains: String
+
+  """All values not containing the given string."""
+  color_not_contains: String
+
+  """All values starting with the given string."""
+  color_starts_with: String
+
+  """All values not starting with the given string."""
+  color_not_starts_with: String
+
+  """All values ending with the given string."""
+  color_ends_with: String
+
+  """All values not ending with the given string."""
+  color_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  bills_every: BillWhereInput
+  bills_some: BillWhereInput
+  bills_none: BillWhereInput
+}
+
+input TagWhereUniqueInput {
+  id: ID
+  name: String
+}
