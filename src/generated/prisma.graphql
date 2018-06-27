@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/brad-richardson/billflash-api/dev
-# timestamp: Tue May 15 2018 09:20:56 GMT-0400 (Eastern Daylight Time)
+# timestamp: Tue May 22 2018 11:58:10 GMT-0400 (EDT)
 
 type AggregateBill {
   count: Int!
@@ -39,6 +39,8 @@ type Bill implements Node {
   paymentUrl: String
   currentBalance: Float
   origBalance: Float
+  currentLoanPaymentNumber: Int
+  origLoanTerm: Int
   interestRate: Float
   escrowAmount: Float
   averagePaymentAmount: Float
@@ -86,6 +88,8 @@ input BillCreateInput {
   paymentUrl: String
   currentBalance: Float
   origBalance: Float
+  currentLoanPaymentNumber: Int
+  origLoanTerm: Int
   interestRate: Float
   escrowAmount: Float
   averagePaymentAmount: Float
@@ -120,6 +124,8 @@ input BillCreateWithoutPaymentsInput {
   paymentUrl: String
   currentBalance: Float
   origBalance: Float
+  currentLoanPaymentNumber: Int
+  origLoanTerm: Int
   interestRate: Float
   escrowAmount: Float
   averagePaymentAmount: Float
@@ -143,6 +149,8 @@ input BillCreateWithoutTagsInput {
   paymentUrl: String
   currentBalance: Float
   origBalance: Float
+  currentLoanPaymentNumber: Int
+  origLoanTerm: Int
   interestRate: Float
   escrowAmount: Float
   averagePaymentAmount: Float
@@ -199,6 +207,10 @@ enum BillOrderByInput {
   currentBalance_DESC
   origBalance_ASC
   origBalance_DESC
+  currentLoanPaymentNumber_ASC
+  currentLoanPaymentNumber_DESC
+  origLoanTerm_ASC
+  origLoanTerm_DESC
   interestRate_ASC
   interestRate_DESC
   escrowAmount_ASC
@@ -238,6 +250,8 @@ type BillPreviousValues {
   paymentUrl: String
   currentBalance: Float
   origBalance: Float
+  currentLoanPaymentNumber: Int
+  origLoanTerm: Int
   interestRate: Float
   escrowAmount: Float
   averagePaymentAmount: Float
@@ -359,6 +373,8 @@ input BillUpdateInput {
   paymentUrl: String
   currentBalance: Float
   origBalance: Float
+  currentLoanPaymentNumber: Int
+  origLoanTerm: Int
   interestRate: Float
   escrowAmount: Float
   averagePaymentAmount: Float
@@ -400,6 +416,8 @@ input BillUpdateWithoutPaymentsDataInput {
   paymentUrl: String
   currentBalance: Float
   origBalance: Float
+  currentLoanPaymentNumber: Int
+  origLoanTerm: Int
   interestRate: Float
   escrowAmount: Float
   averagePaymentAmount: Float
@@ -423,6 +441,8 @@ input BillUpdateWithoutTagsDataInput {
   paymentUrl: String
   currentBalance: Float
   origBalance: Float
+  currentLoanPaymentNumber: Int
+  origLoanTerm: Int
   interestRate: Float
   escrowAmount: Float
   averagePaymentAmount: Float
@@ -765,6 +785,50 @@ input BillWhereInput {
 
   """All values greater than or equal the given value."""
   origBalance_gte: Float
+  currentLoanPaymentNumber: Int
+
+  """All values that are not equal to given value."""
+  currentLoanPaymentNumber_not: Int
+
+  """All values that are contained in given list."""
+  currentLoanPaymentNumber_in: [Int!]
+
+  """All values that are not contained in given list."""
+  currentLoanPaymentNumber_not_in: [Int!]
+
+  """All values less than the given value."""
+  currentLoanPaymentNumber_lt: Int
+
+  """All values less than or equal the given value."""
+  currentLoanPaymentNumber_lte: Int
+
+  """All values greater than the given value."""
+  currentLoanPaymentNumber_gt: Int
+
+  """All values greater than or equal the given value."""
+  currentLoanPaymentNumber_gte: Int
+  origLoanTerm: Int
+
+  """All values that are not equal to given value."""
+  origLoanTerm_not: Int
+
+  """All values that are contained in given list."""
+  origLoanTerm_in: [Int!]
+
+  """All values that are not contained in given list."""
+  origLoanTerm_not_in: [Int!]
+
+  """All values less than the given value."""
+  origLoanTerm_lt: Int
+
+  """All values less than or equal the given value."""
+  origLoanTerm_lte: Int
+
+  """All values greater than the given value."""
+  origLoanTerm_gt: Int
+
+  """All values greater than or equal the given value."""
+  origLoanTerm_gte: Int
   interestRate: Float
 
   """All values that are not equal to given value."""

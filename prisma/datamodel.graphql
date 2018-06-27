@@ -99,6 +99,8 @@ type Bill {
   paymentUrl: String
   currentBalance: Float @default(value: 0)
   origBalance: Float @default(value: 0)
+  currentLoanPaymentNumber: Int @default(value: 0)
+  origLoanTerm: Int
   interestRate: Float @default(value: 0)
   escrowAmount: Float @default(value: 0)
   averagePaymentAmount: Float
